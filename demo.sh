@@ -6,7 +6,7 @@ set -e
 
 make
 if [ ! -e arabic.cp1256 ]; then
-  ggID='11sy-bN658S3g6jXvJJW7C6RqwdhOkwre'
+  ggID='1ZkbS7l5bdRcSmfq74cynSW06TllL7mdW'
   ggURL='https://drive.google.com/uc?export=download'
   filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
