@@ -5,14 +5,16 @@ set -e
 # One optional argument can specify the language used for eval script: matlab, octave or [default] python
 
 make
-if [ ! -e arabic.cp1256 ]; then
+if [ ! -e arabic_corpus/arabic_corpus ]; then
   ggID='1ZkbS7l5bdRcSmfq74cynSW06TllL7mdW'
   ggURL='https://drive.google.com/uc?export=download'
   filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
+  cd arabic_corpus
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
-  tar xzf arabic.taz
-  rm arabic.taz
+  tar xzf arabic_corpus.taz
+  rm arabic_corpus.taz
+  cd ..
 fi
 
 CORPUS=arabic.cp1256
