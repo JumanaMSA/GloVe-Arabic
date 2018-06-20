@@ -133,6 +133,7 @@ int get_counts() {
     if (verbose > 1) fprintf(stderr, "Processed %lld tokens.", i);
     sprintf(format,"%%%ds",MAX_STRING_LENGTH);
     while (fscanf(fid, format, str) != EOF) { // Insert all tokens into hashtable
+        if (str[0] == '\0') continue; // Skip empty strings
         if (strcmp(str, "<unk>") == 0) {
             fprintf(stderr, "\nError, <unk> vector found in corpus.\nPlease remove <unk>s from your corpus (e.g. cat text8 | sed -e 's/<unk>/<raw_unk>/g' > text8.new)");
             return 1;
