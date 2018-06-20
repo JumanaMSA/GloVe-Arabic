@@ -41,6 +41,18 @@ echo "$ $BUILDDIR/shuffle -memory $MEMORY -verbose $VERBOSE < $COOCCURRENCE_FILE
 $BUILDDIR/shuffle -memory $MEMORY -verbose $VERBOSE < $COOCCURRENCE_FILE > $COOCCURRENCE_SHUF_FILE
 echo "$ $BUILDDIR/glove -save-file $SAVE_FILE -threads $NUM_THREADS -input-file $COOCCURRENCE_SHUF_FILE -x-max $X_MAX -iter $MAX_ITER -vector-size $VECTOR_SIZE -binary $BINARY -vocab-file $VOCAB_FILE -verbose $VERBOSE"
 $BUILDDIR/glove -save-file $SAVE_FILE -threads $NUM_THREADS -input-file $COOCCURRENCE_SHUF_FILE -x-max $X_MAX -iter $MAX_ITER -vector-size $VECTOR_SIZE -binary $BINARY -vocab-file $VOCAB_FILE -verbose $VERBOSE
+
+if [ "$CORPUS" = 'arabic_corpus/arabic_corpus' ]; then
+   echo "Converting back to UTF8"
+   iconv -c -f Windows-1256 vocab.txt > vocab_utf8.txt
+   iconv -c -f Windows-1256 vectors.txt > vectors_utf8.txt
+   rm -f vocab.txt vectors.txt
+   mv vocab_utf8.txt vocab.txt
+   mv vectors_utf8.txt vectors.txt
+   echo "$ python eval/python/evaluate.py"
+   python eval/python/evaluate.py
+fi
+
 if [ "$CORPUS" = 'text8' ]; then
    if [ "$1" = 'matlab' ]; then
        matlab -nodisplay -nodesktop -nojvm -nosplash < ./eval/matlab/read_and_evaluate.m 1>&2 
