@@ -6,18 +6,20 @@ set -e
 
 make
 if [ ! -e arabic_corpus/arabic_corpus ]; then
-  ggID='1ZkbS7l5bdRcSmfq74cynSW06TllL7mdW'
-  ggURL='https://drive.google.com/uc?export=download'
-  filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
-  getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
+  #ggID='1ZkbS7l5bdRcSmfq74cynSW06TllL7mdW'
+  #ggURL='https://drive.google.com/uc?export=download'
+  #filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
+  #getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   cd arabic_corpus
-  curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
-  tar xzf arabic_corpus.taz
-  rm arabic_corpus.taz
+  #curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
+  #tar xzf arabic_corpus.taz
+  #rm arabic_corpus.taz
+  wget https://archive.org/download/arabic_corpus/arabic_corpus.xz
+  xz -d arabic_corpus.xz
   cd ..
 fi
 
-CORPUS=arabic.cp1256
+CORPUS=arabic_corpus/arabic_corpus
 VOCAB_FILE=vocab.txt
 COOCCURRENCE_FILE=cooccurrence.bin
 COOCCURRENCE_SHUF_FILE=cooccurrence.shuf.bin
