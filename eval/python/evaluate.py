@@ -1,15 +1,19 @@
 import argparse
 import numpy as np
+import codecs
+import re
+import os
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--vocab_file', default='vocab.txt', type=str)
     parser.add_argument('--vectors_file', default='vectors.txt', type=str)
     args = parser.parse_args()
-
-    with open(args.vocab_file, 'r') as f:
+    print("Opening", args.vocab_file)
+    with codecs.open(args.vocab_file, 'r') as f:
         words = [x.rstrip().split(' ')[0] for x in f.readlines()]
-    with open(args.vectors_file, 'r') as f:
+    print("Opening", args.vectors_file)
+    with codecs.open(args.vectors_file, 'r') as f:
         vectors = {}
         for line in f:
             vals = line.rstrip().split(' ')
@@ -30,19 +34,14 @@ def main():
     W_norm = np.zeros(W.shape)
     d = (np.sum(W ** 2, 1) ** (0.5))
     W_norm = (W.T / d).T
+    print("Started Evaluation .. ")
     evaluate_vectors(W_norm, vocab, ivocab)
 
 def evaluate_vectors(W, vocab, ivocab):
     """Evaluate the trained word vectors on a variety of tasks"""
 
-    filenames = [
-        'capital-common-countries.txt', 'capital-world.txt', 'currency.txt',
-        'city-in-state.txt', 'family.txt', 'gram1-adjective-to-adverb.txt',
-        'gram2-opposite.txt', 'gram3-comparative.txt', 'gram4-superlative.txt',
-        'gram5-present-participle.txt', 'gram6-nationality-adjective.txt',
-        'gram7-past-tense.txt', 'gram8-plural.txt', 'gram9-plural-verbs.txt',
-        ]
     prefix = './eval/question-data/'
+    filenames = [f for f in os.listdir(prefix) if re.match(r'ar.*\.txt', f)]
 
     # to avoid memory overflow, could be increased/decreased
     # depending on system and vocab size
@@ -55,7 +54,7 @@ def evaluate_vectors(W, vocab, ivocab):
     count_syn = 0; # count all syntactic questions
     count_tot = 0 # count all questions
     full_count = 0 # count all questions, including those with unknown words
-
+    logme = open('\nlogme.txt\n','w')
     for i in range(len(filenames)):
         with open('%s/%s' % (prefix, filenames[i]), 'r') as f:
             full_data = [line.rstrip().split(' ') for line in f]
@@ -86,6 +85,9 @@ def evaluate_vectors(W, vocab, ivocab):
         val = (ind4 == predictions) # correct predictions
         count_tot = count_tot + len(ind1)
         correct_tot = correct_tot + sum(val)
+        logme.write(filenames[i])
+        for l in range(len(ind4)):
+             logme.write("%s %s\n" % (ivocab[int(ind4[l])],ivocab[int(predictions[l])]))
         if i < 5:
             count_sem = count_sem + len(ind1)
             correct_sem = correct_sem + sum(val)
@@ -101,8 +103,9 @@ def evaluate_vectors(W, vocab, ivocab):
         (100 * count_tot / float(full_count), count_tot, full_count))
     print('Semantic accuracy: %.2f%%  (%i/%i)' %
         (100 * correct_sem / float(count_sem), correct_sem, count_sem))
-    print('Syntactic accuracy: %.2f%%  (%i/%i)' %
-        (100 * correct_syn / float(count_syn), correct_syn, count_syn))
+    if i >= 5:
+        print('Syntactic accuracy: %.2f%%  (%i/%i)' %
+            (100 * correct_syn / float(count_syn), correct_syn, count_syn))
     print('Total accuracy: %.2f%%  (%i/%i)' % (100 * correct_tot / float(count_tot), correct_tot, count_tot))
 
 
