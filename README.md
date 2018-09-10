@@ -27,7 +27,7 @@
 We provide an implementation of the GloVe model for learning word representations, and describe how to download web-dataset vectors or train your own. See the [paper](http://nlp.stanford.edu/pubs/glove.pdf) for more information on glove vectors.
 
 ## Download pre-trained word vectors
-The links below contain word vectors obtained from the respective corpora. If you want word vectors trained on other data sets, feel free to edit <a href="https://github.com/tarekeldeeb/GloVe-Arabic/blob/master/arabic_corpus/make_corpus.sh"> this script</a>. Pre-trained word vectors are made available under the <a href="http://opendatacommons.org/licenses/pddl/">Public Domain Dedication and License</a>. 
+The links below contain word vectors obtained from the respective corpora. If you want word vectors trained on other data sets, feel free to edit <a href="https://github.com/tarekeldeeb/GloVe-Arabic/blob/master/arabic_corpus/make_corpus.sh"> this script</a>. Pre-trained word vectors are made available under the <a href="https://github.com/ojuba-org/waqf/tree/master/2.0">Waqf v2.0 Public License</a>. 
 <div class="entry">
 <ul style="padding-left:0px; margin-top:0px; margin-bottom:0px">
   <li> Arabic Corpus (1.75B tokens, 1.5M vocab, 256d vectors): <a href="https://archive.org/details/arabic_corpus">Download Archive</a> </li>
